@@ -4,7 +4,7 @@ use full_moon::{
     print,
     tokenizer::{self, Token, TokenReference},
 };
-use insta::assert_yaml_snapshot;
+use insta::assert_json_snapshot;
 use pretty_assertions::assert_eq;
 use std::{borrow::Cow, fmt, fs, path::Path};
 
@@ -35,7 +35,7 @@ fn test_pass_case(path: &Path) {
 
     let tokens = tokenizer::tokens(&source).expect("couldn't tokenize");
 
-    assert_yaml_snapshot!("tokens", tokens);
+    assert_json_snapshot!("tokens", tokens);
 
     let ast = ast::Ast::from_tokens(tokens)
         .unwrap_or_else(|error| panic!("couldn't make ast for {:?} - {:?}", path, error));
@@ -49,7 +49,7 @@ fn test_pass_case(path: &Path) {
             .collect::<Vec<_>>(),
     );
 
-    assert_yaml_snapshot!("ast", ast.nodes());
+    assert_json_snapshot!("ast", ast.nodes());
     assert_eq!(PrettyString(&print(&ast)), PrettyString(&source));
 }
 

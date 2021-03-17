@@ -4,17 +4,23 @@ expression: error
 input_file: full-moon/tests/cases/fail/parser/generic-for-2
 
 ---
-UnexpectedToken:
-  token:
-    start_position:
-      bytes: 17
-      character: 18
-      line: 1
-    end_position:
-      bytes: 17
-      character: 18
-      line: 1
-    token_type:
-      type: Eof
-  additional: "expected 'do'"
-
+{
+  "UnexpectedToken": {
+    "token": {
+      "start_position": {
+        "bytes": 17,
+        "character": 18,
+        "line": 1
+      },
+      "end_position": {
+        "bytes": 17,
+        "character": 18,
+        "line": 1
+      },
+      "token_type": {
+        "type": "Eof"
+      }
+    },
+    "additional": "expected 'do'"
+  }
+}

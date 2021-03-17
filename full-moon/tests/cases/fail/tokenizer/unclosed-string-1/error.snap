@@ -4,9 +4,11 @@ expression: error
 input_file: full-moon/tests/cases/fail/tokenizer/unclosed-string-1
 
 ---
-error: UnclosedString
-position:
-  bytes: 10
-  character: 11
-  line: 1
-
+{
+  "error": "UnclosedString",
+  "position": {
+    "bytes": 10,
+    "character": 11,
+    "line": 1
+  }
+}

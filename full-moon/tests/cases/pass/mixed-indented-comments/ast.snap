@@ -4,5 +4,6 @@ expression: ast.nodes()
 input_file: full-moon/tests/cases/pass/mixed-indented-comments
 
 ---
-stmts: []
-
+{
+  "stmts": []
+}

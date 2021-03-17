@@ -4,17 +4,23 @@ expression: error
 input_file: full-moon/tests/cases/fail/parser/local-function-1
 
 ---
-UnexpectedToken:
-  token:
-    start_position:
-      bytes: 14
-      character: 15
-      line: 1
-    end_position:
-      bytes: 14
-      character: 15
-      line: 1
-    token_type:
-      type: Eof
-  additional: expected name
-
+{
+  "UnexpectedToken": {
+    "token": {
+      "start_position": {
+        "bytes": 14,
+        "character": 15,
+        "line": 1
+      },
+      "end_position": {
+        "bytes": 14,
+        "character": 15,
+        "line": 1
+      },
+      "token_type": {
+        "type": "Eof"
+      }
+    },
+    "additional": "expected name"
+  }
+}

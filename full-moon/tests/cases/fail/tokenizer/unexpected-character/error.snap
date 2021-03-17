@@ -4,10 +4,13 @@ expression: error
 input_file: full-moon/tests/cases/fail/tokenizer/unexpected-character
 
 ---
-error:
-  UnexpectedToken: 🤔
-position:
-  bytes: 10
-  character: 11
-  line: 1
-
+{
+  "error": {
+    "UnexpectedToken": "🤔"
+  },
+  "position": {
+    "bytes": 10,
+    "character": 11,
+    "line": 1
+  }
+}

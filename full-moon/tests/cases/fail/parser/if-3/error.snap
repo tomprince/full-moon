@@ -4,18 +4,24 @@ expression: error
 input_file: full-moon/tests/cases/fail/parser/if-3
 
 ---
-UnexpectedToken:
-  token:
-    start_position:
-      bytes: 3
-      character: 4
-      line: 1
-    end_position:
-      bytes: 8
-      character: 9
-      line: 1
-    token_type:
-      type: Symbol
-      symbol: local
-  additional: expected condition
-
+{
+  "UnexpectedToken": {
+    "token": {
+      "start_position": {
+        "bytes": 3,
+        "character": 4,
+        "line": 1
+      },
+      "end_position": {
+        "bytes": 8,
+        "character": 9,
+        "line": 1
+      },
+      "token_type": {
+        "type": "Symbol",
+        "symbol": "local"
+      }
+    },
+    "additional": "expected condition"
+  }
+}

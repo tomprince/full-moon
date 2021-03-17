@@ -4,18 +4,24 @@ expression: error
 input_file: full-moon/tests/cases/fail/parser/table-5
 
 ---
-UnexpectedToken:
-  token:
-    start_position:
-      bytes: 10
-      character: 2
-      line: 2
-    end_position:
-      bytes: 15
-      character: 7
-      line: 2
-    token_type:
-      type: Symbol
-      symbol: until
-  additional: "expected '}'"
-
+{
+  "UnexpectedToken": {
+    "token": {
+      "start_position": {
+        "bytes": 10,
+        "character": 2,
+        "line": 2
+      },
+      "end_position": {
+        "bytes": 15,
+        "character": 7,
+        "line": 2
+      },
+      "token_type": {
+        "type": "Symbol",
+        "symbol": "until"
+      }
+    },
+    "additional": "expected '}'"
+  }
+}

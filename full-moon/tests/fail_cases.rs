@@ -1,5 +1,5 @@
 use full_moon::{ast, tokenizer};
-use insta::assert_yaml_snapshot;
+use insta::assert_json_snapshot;
 use std::fs;
 
 mod common;
@@ -13,13 +13,13 @@ fn test_parser_fail_cases() {
 
         let tokens = tokenizer::tokens(&source).expect("couldn't tokenize");
 
-        assert_yaml_snapshot!("tokens", tokens);
+        assert_json_snapshot!("tokens", tokens);
 
         match ast::Ast::from_tokens(tokens) {
             Ok(_) => panic!("fail case passed for {:?}", path),
             Err(error) => {
                 println!("error {:#?}", error);
-                assert_yaml_snapshot!("error", error);
+                assert_json_snapshot!("error", error);
             }
         }
     })
@@ -34,7 +34,7 @@ fn test_tokenizer_fail_cases() {
         match tokenizer::tokens(&source) {
             Ok(_) => panic!("fail case passed for {:?}", path),
             Err(error) => {
-                assert_yaml_snapshot!("error", error);
+                assert_json_snapshot!("error", error);
             }
         }
     })
@@ -49,13 +49,13 @@ fn test_lua52_parser_fail_cases() {
 
         let tokens = tokenizer::tokens(&source).expect("couldn't tokenize");
 
-        assert_yaml_snapshot!("tokens", tokens);
+        assert_json_snapshot!("tokens", tokens);
 
         match ast::Ast::from_tokens(tokens) {
             Ok(_) => panic!("fail case passed for {:?}", path),
             Err(error) => {
                 println!("error {:#?}", error);
-                assert_yaml_snapshot!("error", error);
+                assert_json_snapshot!("error", error);
             }
         }
     })

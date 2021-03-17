@@ -4,17 +4,23 @@ expression: error
 input_file: full-moon/tests/lua52_cases/fail/parser/label-1
 
 ---
-UnexpectedToken:
-  token:
-    start_position:
-      bytes: 7
-      character: 8
-      line: 1
-    end_position:
-      bytes: 7
-      character: 8
-      line: 1
-    token_type:
-      type: Eof
-  additional: "expected `::`"
-
+{
+  "UnexpectedToken": {
+    "token": {
+      "start_position": {
+        "bytes": 7,
+        "character": 8,
+        "line": 1
+      },
+      "end_position": {
+        "bytes": 7,
+        "character": 8,
+        "line": 1
+      },
+      "token_type": {
+        "type": "Eof"
+      }
+    },
+    "additional": "expected `::`"
+  }
+}
