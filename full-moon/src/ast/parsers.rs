@@ -3,6 +3,7 @@ use super::{
     span::ContainedSpan,
     *,
 };
+use peg;
 
 #[cfg(feature = "roblox")]
 use super::types::*;
@@ -11,6 +12,100 @@ use super::types::*;
 use super::lua52::*;
 
 use crate::tokenizer::{TokenKind, TokenReference, TokenType};
+
+trait ParseTokens<'text, 'input> {
+    fn parse_symbol(self, pos: usize, symbol: Symbol) -> peg::RuleResult<TokenReference<'text>>;
+    fn parse_number(self: Self, pos: usize) -> peg::RuleResult<TokenReference<'text>> ;
+    fn parse_string_literal(self: Self, pos: usize) -> peg::RuleResult<TokenReference<'text>> ;
+    fn parse_identifier(self: Self, pos: usize) -> peg::RuleResult<TokenReference<'text>> ;
+}
+impl<'text, 'input> ParseTokens<'text, 'input> for &'input [TokenReference<'text>] {
+    fn parse_symbol(self: Self, pos: usize, symbol : Symbol) -> peg::RuleResult<TokenReference<'text>> {
+        if *self[pos].token_type() == (TokenType::Symbol { symbol }) {
+            return peg::RuleResult::Matched(pos + 1, self[pos].clone())
+        }
+        peg::RuleResult::Failed
+    }
+
+    fn parse_number(self: Self, pos: usize) -> peg::RuleResult<TokenReference<'text>> {
+        if self[pos].token_kind() == TokenKind::Number {
+            return peg::RuleResult::Matched(pos + 1, self[pos].clone())
+        }
+        peg::RuleResult::Failed
+    }
+
+    fn parse_string_literal(self: Self, pos: usize) -> peg::RuleResult<TokenReference<'text>> {
+        if self[pos].token_kind() == TokenKind::StringLiteral {
+            return peg::RuleResult::Matched(pos + 1, self[pos].clone())
+        }
+        peg::RuleResult::Failed
+    }
+    fn parse_identifier(self: Self, pos: usize) -> peg::RuleResult<TokenReference<'text>> {
+        if self[pos].token_kind() == TokenKind::Identifier {
+            return peg::RuleResult::Matched(pos + 1, self[pos].clone())
+        }
+        peg::RuleResult::Failed
+    }
+}
+
+peg::parser! {
+    grammar ast<'text>() for [TokenReference<'text>] {
+        rule roblox()
+            = {? if cfg!(feature = "roblox") {
+                Ok(())
+            } else {
+                Err("roblox not enabled")
+            }}
+
+        rule symbol(sym: Symbol) -> TokenReference<'text>
+            = ##parse_symbol(sym)
+
+        rule number() -> TokenReference<'text>
+            = ##parse_number()
+
+        rule string_literal() -> TokenReference<'text>
+            = ##parse_string_literal()
+
+        rule identifier() -> TokenReference<'text>
+            = ##parse_identifier()
+
+        rule block() -> Block<'text>
+            = stmts:(stmt:statement() semi:symbol((Symbol::Semicolon))? {(stmt, semi)})+
+              last_stmt:(stmt:last_statement() semi:symbol((Symbol::Semicolon))? {(stmt, semi)})?
+              {
+                Block {stmts, last_stmt}
+              }
+
+        rule last_statement() -> LastStmt<'text>
+            = token:symbol((Symbol::Return)) returns:(
+                  // We can't use expression() ** symbol(Comma) due to
+                  // https://github.com/kevinmehall/rust-peg/issues/259
+                  expr:expression()
+                  items:(comma:symbol((Symbol::Comma)) expr:expression() {(comma, expr)})*
+                  comma:symbol((Symbol::Comma))?
+                  { Punctuated::from_parts(expr, items, comma) }
+                / { Punctuated::new() }
+              ) { LastStmt::Return(Return { token, returns }) }
+            / token:symbol((Symbol::Break)) { LastStmt::Break(token) }
+            / roblox()
+              token:identifier() ({? if token.token().to_string() == "continue" { Ok(()) } else { Err("not continue") } })
+              {
+                  cfg_if::cfg_if! {
+                      if #[cfg(feature = "roblox")] {
+                          LastStmt::Continue(token)
+                      } else {
+                          unreachable!("roblox not enabled")
+                      }
+                  }
+              }
+
+        rule statement() -> Stmt<'text>
+            = [_]{ todo!() }
+
+        rule expression() -> Expression<'text>
+            = [_]{ todo!() }
+    }
+}
 
 #[derive(Clone, Debug, PartialEq)]
 struct ParseSymbol(Symbol);

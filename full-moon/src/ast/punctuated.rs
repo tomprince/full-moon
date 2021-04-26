@@ -48,6 +48,20 @@ impl<'a, T> Punctuated<'a, T> {
         Self { pairs: Vec::new() }
     }
 
+    pub(crate) fn from_parts(first: T, items: Vec<(TokenReference<'a>, T)>, end: Option<TokenReference<'a>>) -> Self {
+        let mut pairs = Vec::new();
+        let mut prev = first;
+        for (delim, next) in items {
+            pairs.push(Pair::Punctuated(prev, delim));
+            prev = next;
+        }
+        match end {
+            Some(delim) => pairs.push(Pair::Punctuated(prev, delim)),
+            None => pairs.push(Pair::End(prev)),
+        }
+        Self { pairs}
+    }
+
     /// Returns whether there's any nodes in the punctuated sequence
     /// ```rust
     /// # use full_moon::ast::punctuated::{Pair, Punctuated};
